@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Sanko EMI — Data Explorer</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  .explorer{display:grid;grid-template-columns:220px 1fr;height:100%;gap:0;}
+  .fields{border-right:1px solid var(--border);padding:12px;overflow:auto;}
+  .field-group{margin-bottom:14px;}
+  .field-group-title{font-size:10px;text-transform:uppercase;color:var(--text-secondary);letter-spacing:0.04em;margin-bottom:6px;}
+  .field-row{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12px;color:var(--text-primary);}
+  .field-row input{accent-color:var(--accent);}
+  .explorer-main{display:flex;flex-direction:column;overflow:hidden;}
+  .toolbar{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+  .grid-wrap{flex:1;overflow:auto;}
+  .pinned{position:sticky;left:0;background:var(--bg-canvas);box-shadow:2px 0 4px rgba(0,0,0,0.3);}
+  .footer{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-top:1px solid var(--border);font-size:11px;color:var(--text-secondary);}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">SANKO&nbsp;ENERGY&nbsp;<span style="color:var(--text-secondary);font-weight:400;">/ Data Explorer</span></div>
+      <div class="search">⌘K &nbsp; Ara...</div>
+    </div>
+    <div class="header-right">
+      <div class="env-badge">PROD</div>
+      <div class="bell">🔔<span class="count">3</span></div>
+      <div class="avatar">EA</div>
+    </div>
+  </div>
+  <div class="sidebar">
+    <div class="nav-icon">▦</div>
+    <div class="nav-icon">📈</div>
+    <div class="nav-icon active">🔎</div>
+    <div class="nav-icon">🏭</div>
+    <div class="nav-icon">🧠</div>
+    <div class="nav-icon">📁</div>
+    <div class="nav-icon">🔔</div>
+    <div class="nav-icon">⚙</div>
+  </div>
+  <div class="filterbar">
+    <div class="chip accent">📅 <b>Son 7 gün</b></div>
+    <div class="chip">Santral: <b>Tümü</b> ✕</div>
+    <div class="chip">Yakıt: <b>Rüzgar, Doğalgaz</b> ✕</div>
+    <div class="chip" style="border-style:dashed;cursor:pointer;">+ Filtre Ekle</div>
+    <div class="chip" style="margin-left:auto;">💾 Kayıtlı Görünümler ▾</div>
+  </div>
+
+  <div class="main" style="padding:0;">
+    <div class="explorer" style="height:100%;">
+      <div class="fields">
+        <div class="field-group">
+          <div class="field-group-title">Zaman &amp; Kimlik</div>
+          <div class="field-row"><input type="checkbox" checked>Zaman Damgası</div>
+          <div class="field-row"><input type="checkbox" checked>Santral</div>
+          <div class="field-row"><input type="checkbox" checked>Bölge</div>
+        </div>
+        <div class="field-group">
+          <div class="field-group-title">Üretim</div>
+          <div class="field-row"><input type="checkbox" checked>Yakıt Tipi</div>
+          <div class="field-row"><input type="checkbox" checked>Üretim (MWh)</div>
+          <div class="field-row"><input type="checkbox">UEVM (MWh)</div>
+          <div class="field-row"><input type="checkbox" checked>Δ vs Tahmin</div>
+        </div>
+        <div class="field-group">
+          <div class="field-group-title">Fiyat</div>
+          <div class="field-row"><input type="checkbox" checked>PTF</div>
+          <div class="field-row"><input type="checkbox">SMF</div>
+        </div>
+      </div>
+
+      <div class="explorer-main">
+        <div class="toolbar">
+          <button class="btn">↕ Sırala</button>
+          <button class="btn">▤ Grupla</button>
+          <button class="btn">Σ Toplulaştır</button>
+          <input placeholder="Tabloda ara..." style="background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:6px;padding:6px 10px;color:var(--text-primary);font-size:12px;width:200px;">
+          <button class="btn primary" style="margin-left:auto;">Görünümü Kaydet</button>
+          <button class="btn">⬇ Dışa Aktar</button>
+        </div>
+        <div class="grid-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="pinned">Zaman</th><th class="pinned">Santral</th><th>Yakıt</th><th>Bölge</th>
+                <th class="num">Üretim (MWh)</th><th class="num">PTF</th><th class="num">Δ vs Tahmin</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <div class="footer">
+          <div>Σ Toplam Üretim: <span class="tabular">184,230 MWh</span> &nbsp; Ort. PTF: <span class="tabular">₺2,461</span></div>
+          <div>Satır 1–50 / 4,820 &nbsp; ‹ ›</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="statusbar">
+    <div><span class="dot"></span>EPİAŞ API Bağlı &nbsp; Son Senkron: 12:41:03</div>
+    <div>Sanko EMI v2.3</div>
+  </div>
+</div>
+<script>
+  const plants=[["Plant A","Rüzgar","wind","Marmara"],["Plant B","Doğalgaz","gas","Ege"],["Plant C","Güneş","solar","İç Anadolu"],["Plant D","Rüzgar","wind","Ege"]];
+  const tbody=document.getElementById('tbody');
+  let rows='';
+  for(let h=0; h<25; h++){
+    const p=plants[h%plants.length];
+    const ts=`2026-07-1${1+(h%3)} ${String(h%24).padStart(2,'0')}:00`;
+    const gen=(300+Math.random()*900).toFixed(0);
+    const ptf=(2200+Math.random()*500).toFixed(0);
+    const delta=(Math.random()*30-10).toFixed(1);
+    const deltaColor = delta>=0 ? 'var(--status-positive)':'var(--status-negative)';
+    rows+=`<tr><td class="pinned tabular">${ts}</td><td class="pinned">${p[0]}</td><td><span class="badge ${p[2]}">${p[1]}</span></td><td>${p[3]}</td><td class="num tabular">${gen}</td><td class="num tabular">${ptf}</td><td class="num tabular" style="color:${deltaColor}">${delta>=0?'+':''}${delta}%</td></tr>`;
+  }
+  tbody.innerHTML=rows;
+</script>
+</body>
+</html>

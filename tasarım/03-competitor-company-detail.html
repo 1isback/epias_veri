@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Sanko EMI — Competitor Analysis / Company Detail</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  .company-header{display:flex;align-items:center;gap:14px;padding:16px;border-bottom:1px solid var(--border);}
+  .company-logo{width:44px;height:44px;border-radius:8px;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;font-weight:600;color:var(--text-secondary);}
+  .company-stats{display:flex;gap:24px;margin-left:auto;}
+  .stat{text-align:right;}
+  .stat-label{font-size:10px;color:var(--text-secondary);text-transform:uppercase;}
+  .stat-value{font-size:16px;font-weight:600;}
+  .bench-row{display:grid;grid-template-columns:1fr 100px 100px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;align-items:center;}
+  .bench-bar-wrap{background:var(--bg-elevated);border-radius:4px;height:6px;overflow:hidden;margin-top:4px;}
+  .bench-bar{height:100%;background:var(--accent);}
+  .bench-bar.sanko{background:var(--status-positive);}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">SANKO&nbsp;ENERGY&nbsp;<span style="color:var(--text-secondary);font-weight:400;">/ Competitor Analysis</span></div>
+      <div class="search">⌘K &nbsp; Ara...</div>
+    </div>
+    <div class="header-right">
+      <div class="env-badge">PROD</div>
+      <div class="bell">🔔<span class="count">3</span></div>
+      <div class="avatar">EA</div>
+    </div>
+  </div>
+  <div class="sidebar">
+    <div class="nav-icon">▦</div>
+    <div class="nav-icon">📈</div>
+    <div class="nav-icon">🔎</div>
+    <div class="nav-icon active">🏭</div>
+    <div class="nav-icon">🧠</div>
+    <div class="nav-icon">📁</div>
+    <div class="nav-icon">🔔</div>
+    <div class="nav-icon">⚙</div>
+  </div>
+  <div class="filterbar">
+    <div class="chip" style="cursor:pointer;">← Şirketler</div>
+    <div class="chip accent"><b>Company X</b></div>
+    <div class="chip">Kurulu Güç: <b>1,240 MW</b></div>
+    <div class="chip">Pazar Payı: <b>%6.8</b></div>
+  </div>
+
+  <div class="main" style="padding:0;">
+    <div class="section-tabs">
+      <div class="tab">Santraller</div>
+      <div class="tab active">Üretim Trendi</div>
+      <div class="tab">Yakıt Karışımı</div>
+      <div class="tab">Pazar Payı</div>
+      <div class="tab">Benchmark</div>
+    </div>
+    <div class="grid" style="padding:16px;">
+
+      <div class="card" style="grid-column:span 5;">
+        <div class="card-header"><div class="card-title">Yakıt Karışımı</div><span class="card-menu">⋯</span></div>
+        <div class="card-body">
+          <svg viewBox="0 0 200 60" width="100%" height="60">
+            <rect x="0" y="20" width="90" height="20" fill="var(--fuel-gas)"/>
+            <rect x="90" y="20" width="60" height="20" fill="var(--fuel-hydro)"/>
+            <rect x="150" y="20" width="50" height="20" fill="var(--fuel-coal)"/>
+          </svg>
+          <div class="legend">
+            <span><span class="legend-dot" style="background:var(--fuel-gas);"></span>Doğalgaz 45%</span>
+            <span><span class="legend-dot" style="background:var(--fuel-hydro);"></span>Hidro 30%</span>
+            <span><span class="legend-dot" style="background:var(--fuel-coal);"></span>Kömür 25%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="grid-column:span 7;">
+        <div class="card-header"><div class="card-title">Üretim Trendi (90 gün)</div><span class="card-badge">Aylık</span></div>
+        <div class="card-body">
+          <svg viewBox="0 0 400 100" preserveAspectRatio="none" style="width:100%;height:100px;">
+            <polyline fill="none" stroke="var(--accent)" stroke-width="2"
+              points="0,70 40,60 80,65 120,50 160,55 200,40 240,45 280,35 320,42 360,30 400,38"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="card" style="grid-column:span 12;">
+        <div class="card-header"><div class="card-title">Santraller</div><span class="card-menu">⋯</span></div>
+        <div class="card-body" style="padding:0;">
+          <table>
+            <thead><tr><th>Santral</th><th>Bölge</th><th>Yakıt</th><th class="num">Kapasite (MW)</th><th class="num">Kapasite Faktörü</th></tr></thead>
+            <tbody>
+              <tr><td>X Termik-1</td><td>Ege</td><td><span class="badge gas">Doğalgaz</span></td><td class="num">560</td><td class="num">62%</td></tr>
+              <tr><td>X Hidro-2</td><td>Karadeniz</td><td><span class="badge">Hidro</span></td><td class="num">370</td><td class="num">41%</td></tr>
+              <tr><td>X Kömür-1</td><td>İç Anadolu</td><td><span class="badge">Kömür</span></td><td class="num">310</td><td class="num">58%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="grid-column:span 12;">
+        <div class="card-header"><div class="card-title">Benchmark — Company X vs Sanko</div><span class="card-menu">⋯</span></div>
+        <div class="card-body">
+          <div class="bench-row">
+            <div>Kapasite Faktörü
+              <div class="bench-bar-wrap"><div class="bench-bar" style="width:58%;"></div></div>
+            </div>
+            <div class="num tabular">%58</div>
+            <div class="num tabular" style="color:var(--status-positive)">Sanko %64</div>
+          </div>
+          <div class="bench-row">
+            <div>Kullanılabilirlik
+              <div class="bench-bar-wrap"><div class="bench-bar" style="width:91%;"></div></div>
+            </div>
+            <div class="num tabular">%91</div>
+            <div class="num tabular" style="color:var(--status-negative)">Sanko %88</div>
+          </div>
+          <div class="bench-row">
+            <div>MW başına Üretim
+              <div class="bench-bar-wrap"><div class="bench-bar" style="width:70%;"></div></div>
+            </div>
+            <div class="num tabular">1.42</div>
+            <div class="num tabular" style="color:var(--status-positive)">Sanko 1.55</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="statusbar">
+    <div><span class="dot"></span>EPİAŞ API Bağlı</div>
+    <div>Sanko EMI v2.3</div>
+  </div>
+</div>
+</body>
+</html>
